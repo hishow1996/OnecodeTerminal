@@ -2,6 +2,7 @@
 <resources>
     <!-- Compose应用主题 - 基于Material Components -->
     <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
         <!-- 状态栏和导航栏配置 -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

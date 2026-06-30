@@ -27,7 +27,6 @@ class MainActivity : ComponentActivity() {
 
         // 1. 设置应用内容以在系统栏后面绘制，实现边到边效果
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
 
         // 2. 隐藏状态栏和导航栏，并设置滑动行为
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
