@@ -72,4 +72,10 @@ class MainActivity : ComponentActivity() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
+
+    override fun onPause() {
+        super.onPause()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    }
 }
