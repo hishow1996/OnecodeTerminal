@@ -37,11 +37,14 @@ class MainActivity : ComponentActivity() {
         // 3. 创建TerminalManager实例
         val terminalManager = TerminalManager.getInstance(this)
         
-        // 4. 创建初始会话
         lifecycleScope.launch {
             try {
-                terminalManager.createNewSession("Default Session")
-                Log.d("MainActivity", "Initial session created successfully")
+                if (terminalManager.terminalState.value.sessions.isEmpty()) {
+                    terminalManager.createNewSession("Default Session")
+                    Log.d("MainActivity", "Initial session created successfully")
+                } else {
+                    Log.d("MainActivity", "Session already exists, skipping creation")
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Failed to create initial session", e)
             }

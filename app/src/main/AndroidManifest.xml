@@ -24,6 +24,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:theme="@style/Theme.MyApplication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
