@@ -1,7 +1,9 @@
 package com.ai.assistance.operit.terminal
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -25,7 +27,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. 设置应用内容以在系统栏后面绘制，实现边到边效果
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
@@ -35,7 +36,6 @@ class MainActivity : ComponentActivity() {
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
-        // 3. 创建TerminalManager实例
         val terminalManager = TerminalManager.getInstance(this)
         
         lifecycleScope.launch {
@@ -65,5 +65,11 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
 }
