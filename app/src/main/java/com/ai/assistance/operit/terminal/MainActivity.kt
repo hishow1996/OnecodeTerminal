@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -69,20 +71,52 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private var blackOverlay: View? = null
+
+    private fun showBlackOverlay() {
+        if (blackOverlay != null) return
+        val overlay = View(this).apply {
+            setBackgroundColor(android.graphics.Color.BLACK)
+            isClickable = false
+            isFocusable = false
+        }
+        window.decorView.addView(
+            overlay,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
+        blackOverlay = overlay
+    }
+
+    private fun hideBlackOverlay() {
+        blackOverlay?.let { overlay ->
+            (overlay.parent as? ViewGroup)?.removeView(overlay)
+        }
+        blackOverlay = null
+    }
+
     private fun dismissKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(window.decorView.windowToken, 0)
         window.decorView.requestLayout()
-        window.decorView.findViewById<android.view.View>(android.R.id.content)?.requestLayout()
+        window.decorView.findViewById<View>(android.R.id.content)?.requestLayout()
     }
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
+        showBlackOverlay()
         dismissKeyboard()
     }
 
     override fun onPause() {
         super.onPause()
         dismissKeyboard()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideBlackOverlay()
     }
 }
