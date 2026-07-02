@@ -75,12 +75,13 @@ class MainActivity : ComponentActivity() {
 
     private fun showBlackOverlay() {
         if (blackOverlay != null) return
+        val root = window.decorView as? ViewGroup ?: return
         val overlay = View(this).apply {
             setBackgroundColor(android.graphics.Color.BLACK)
             isClickable = false
             isFocusable = false
         }
-        window.decorView.addView(
+        root.addView(
             overlay,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
