@@ -1,12 +1,12 @@
-﻿# Operit Terminal
+﻿# Onecode Terminal
 
 <p align="center">
-  <img src="docs/9f85b39450c8616909039b66d15a475a.jpg" alt="Operit Terminal" width="300"/>
+  <img src="docs/9f85b39450c8616909039b66d15a475a.jpg" alt="Onecode Terminal" width="300"/>
 </p>
 
 ## 概述
 
-这是一款在 Android 设备上运行的 Ubuntu 24 系统，作为核心组件被集成于 Operit 应用中，为用户提供了一个功能完整、性能强大的移动 Linux 环境。其最大的优势在于与 Operit 的深度集成，提供无缝衔接的开发与操作体验。
+这是一款在 Android 设备上运行的 Ubuntu 24 系统，作为核心组件被集成于 Onecode 应用中，为用户提供了一个功能完整、性能强大的移动 Linux 环境。其最大的优势在于与 Onecode 的深度集成，提供无缝衔接的开发与操作体验。
 
 ## 主要特性
 
@@ -32,7 +32,7 @@
 
 ## 架构概述
 
-`Operit Terminal` 构建在一个以 `TerminalManager` 类为中心的模块化架构之上，该类位于 `terminal-core` 模块中。
+`Onecode Terminal` 构建在一个以 `TerminalManager` 类为中心的模块化架构之上，该类位于 `terminal-core` 模块中。
 
 -   **`TerminalManager` (在 `terminal-core` 中)**: 这个单例类是应用的核心。它管理所有终端会话，处理命令，并持有终端的全部状态（例如，会话、命令历史、当前目录）。它使用 Kotlin Flows 以响应式的方式暴露这些状态。
 

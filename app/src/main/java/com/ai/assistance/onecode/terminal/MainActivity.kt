@@ -1,4 +1,4 @@
-package com.ai.assistance.operit.terminal
+package com.ai.assistance.onecode.terminal
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.ai.assistance.operit.terminal.main.TerminalScreen
+import com.ai.assistance.onecode.terminal.main.TerminalScreen
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import android.util.Log

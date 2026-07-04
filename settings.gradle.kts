@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OperitTerminal"
+rootProject.name = "OnecodeTerminal"
 include(":app")
 include(":terminal-core")

@@ -1,12 +1,12 @@
-# Operit Terminal
+# Onecode Terminal
 
 <p align="center">
-  <img src="docs/9f85b39450c8616909039b66d15a475a.jpg" alt="Operit Terminal" width="300"/>
+  <img src="docs/9f85b39450c8616909039b66d15a475a.jpg" alt="Onecode Terminal" width="300"/>
 </p>
 
 ## Overview
 
-This is a Ubuntu 24 system that runs on Android devices, integrated as a core component within the Operit application. It provides users with a fully functional and powerful mobile Linux environment. Its greatest advantage lies in its deep integration with Operit, offering a seamless development and operational experience.
+This is a Ubuntu 24 system that runs on Android devices, integrated as a core component within the Onecode application. It provides users with a fully functional and powerful mobile Linux environment. Its greatest advantage lies in its deep integration with Onecode, offering a seamless development and operational experience.
 
 ## Key Features
 
@@ -32,7 +32,7 @@ For how to clone and update a repository containing submodules, please refer to 
 
 ## Architecture Overview
 
-`Operit Terminal` is built on a modular architecture centered around the `TerminalManager` class, which resides in the `terminal-core` module.
+`Onecode Terminal` is built on a modular architecture centered around the `TerminalManager` class, which resides in the `terminal-core` module.
 
 -   **`TerminalManager` (in `terminal-core`)**: This singleton class is the heart of the application. It manages all terminal sessions, processes commands, and holds the entire state of the terminal (e.g., sessions, command history, current directory). It exposes this state reactively using Kotlin Flows.
 

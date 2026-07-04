@@ -1,4 +1,4 @@
-package com.ai.assistance.operit.terminal
+package com.ai.assistance.onecode.terminal
 
 import org.junit.Test
 
