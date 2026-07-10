@@ -137,6 +137,7 @@ class MainActivity : ComponentActivity() {
                     if (downX < edgeWidth || downX > screenWidth - edgeWidth) {
                         longPressRunnable = showStatusRunnable
                         handler.postDelayed(showStatusRunnable, longPressTimeout)
+                        return true
                     }
                 }
             }
