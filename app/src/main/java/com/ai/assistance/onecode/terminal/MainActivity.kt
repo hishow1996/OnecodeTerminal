@@ -9,6 +9,7 @@ import android.os.Looper
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewConfiguration
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -40,8 +41,22 @@ class MainActivity : ComponentActivity() {
 
     private val hideStatusRunnable = Runnable {
         statusBarShown = false
-        lastBackPressedTime = 0L
-        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
+    private var longPressRunnable: Runnable? = null
+    private var downX = 0f
+    private var downY = 0f
+    private val edgeWidth: Int by lazy { (32 * resources.displayMetrics.density).toInt() }
+    private val touchSlop: Int by lazy { ViewConfiguration.get(this).scaledTouchSlop }
+    private val longPressTimeout = 500L
+
+    private val showStatusRunnable = Runnable {
+        statusBarShown = true
+        handler.removeCallbacks(hideStatusRunnable)
+        windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+        handler.postDelayed(hideStatusRunnable, 3000L)
+        longPressRunnable = null
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -55,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
         windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
         val terminalManager = TerminalManager.getInstance(this)
@@ -88,36 +103,58 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // 双重侧滑退出：第一次侧滑拉出状态栏+提示，2秒内再侧滑退出 app
-        // 子页面(Settings/Setup)的 NavHost BackHandler 优先级更高，不会被这里拦截
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val currentTime = System.currentTimeMillis()
                 if (lastBackPressedTime > 0 && currentTime - lastBackPressedTime < 2000L) {
-                    handler.removeCallbacks(hideStatusRunnable)
                     finish()
                 } else {
-                    statusBarShown = true
-                    windowInsetsController.show(WindowInsetsCompat.Type.statusBars())
-                    Toast.makeText(this@MainActivity, "再按一次退出", Toast.LENGTH_SHORT).show()
                     lastBackPressedTime = currentTime
-                    handler.removeCallbacks(hideStatusRunnable)
-                    handler.postDelayed(hideStatusRunnable, 3000L)
+                    Toast.makeText(this@MainActivity, "再按一次退出", Toast.LENGTH_SHORT).show()
                 }
             }
         })
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (statusBarShown && ev.action == MotionEvent.ACTION_DOWN) {
-            val insets = ViewCompat.getRootWindowInsets(window.decorView)
-            val statusBarHeight = insets?.getInsets(WindowInsetsCompat.Type.statusBars())?.top
-                ?: getStatusBarHeightFallback()
-            if (ev.rawY > statusBarHeight) {
-                statusBarShown = false
-                lastBackPressedTime = 0L
-                handler.removeCallbacks(hideStatusRunnable)
-                windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
+        when (ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                downX = ev.rawX
+                downY = ev.rawY
+
+                if (statusBarShown) {
+                    val insets = ViewCompat.getRootWindowInsets(window.decorView)
+                    val statusBarHeight = insets?.getInsets(WindowInsetsCompat.Type.statusBars())?.top
+                        ?: getStatusBarHeightFallback()
+                    if (downY > statusBarHeight) {
+                        statusBarShown = false
+                        lastBackPressedTime = 0L
+                        handler.removeCallbacks(hideStatusRunnable)
+                        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+                    }
+                } else if (longPressRunnable == null) {
+                    val screenWidth = resources.displayMetrics.widthPixels
+                    if (downX < edgeWidth || downX > screenWidth - edgeWidth) {
+                        longPressRunnable = showStatusRunnable
+                        handler.postDelayed(showStatusRunnable, longPressTimeout)
+                    }
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (longPressRunnable != null) {
+                    val dx = Math.abs(ev.rawX - downX)
+                    val dy = Math.abs(ev.rawY - downY)
+                    if (dx > touchSlop || dy > touchSlop) {
+                        handler.removeCallbacks(longPressRunnable!!)
+                        longPressRunnable = null
+                    }
+                }
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                if (longPressRunnable != null) {
+                    handler.removeCallbacks(longPressRunnable!!)
+                    longPressRunnable = null
+                }
             }
         }
         return super.dispatchTouchEvent(ev)
@@ -130,6 +167,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         handler.removeCallbacks(hideStatusRunnable)
+        handler.removeCallbacks(showStatusRunnable)
         super.onDestroy()
     }
 
