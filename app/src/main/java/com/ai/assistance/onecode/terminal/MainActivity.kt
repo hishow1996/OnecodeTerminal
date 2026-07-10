@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -16,6 +18,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.ai.assistance.onecode.terminal.main.TerminalScreen
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -27,8 +32,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
         window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.BLACK))
+
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
         val terminalManager = TerminalManager.getInstance(this)
         
@@ -57,6 +69,19 @@ class MainActivity : ComponentActivity() {
                 TerminalScreen(
                     env = terminalEnv
                 )
+            }
+        }
+
+        // 双重返回退出：根页面侧滑/返回第一次提示，2秒内再按一次退出 app
+        // 子页面(Settings/Setup)的 NavHost BackHandler 优先级更高，不会被这里拦截
+        var lastBackPressedTime = 0L
+        onBackPressedDispatcher.addCallback(this) {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastBackPressedTime < 2000L) {
+                finish()
+            } else {
+                lastBackPressedTime = currentTime
+                Toast.makeText(this@MainActivity, "再按一次退出", Toast.LENGTH_SHORT).show()
             }
         }
     }
