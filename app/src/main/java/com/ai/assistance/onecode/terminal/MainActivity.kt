@@ -75,15 +75,17 @@ class MainActivity : ComponentActivity() {
         // 双重返回退出：根页面侧滑/返回第一次提示，2秒内再按一次退出 app
         // 子页面(Settings/Setup)的 NavHost BackHandler 优先级更高，不会被这里拦截
         var lastBackPressedTime = 0L
-        onBackPressedDispatcher.addCallback(this) {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastBackPressedTime < 2000L) {
-                finish()
-            } else {
-                lastBackPressedTime = currentTime
-                Toast.makeText(this@MainActivity, "再按一次退出", Toast.LENGTH_SHORT).show()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastBackPressedTime < 2000L) {
+                    finish()
+                } else {
+                    lastBackPressedTime = currentTime
+                    Toast.makeText(this@MainActivity, "再按一次退出", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
+        })
     }
 
     private var blackOverlay: View? = null
