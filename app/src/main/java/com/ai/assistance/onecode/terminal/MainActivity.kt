@@ -16,9 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import com.ai.assistance.onecode.terminal.main.TerminalScreen
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -30,15 +27,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
         window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.BLACK))
-
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
         val terminalManager = TerminalManager.getInstance(this)
         
