@@ -1,6 +1,7 @@
 package com.ai.assistance.onecode.terminal
 
 import android.content.Context
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
     private var downX = 0f
     private var downY = 0f
     private val edgeWidth: Int by lazy { (32 * resources.displayMetrics.density).toInt() }
+    private val exclusionHeight: Int by lazy { (200 * resources.displayMetrics.density).toInt() }
     private val touchSlop: Int by lazy { ViewConfiguration.get(this).scaledTouchSlop }
     private val longPressTimeout = 500L
 
@@ -72,6 +74,15 @@ class MainActivity : ComponentActivity() {
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val ew = edgeWidth
+            val eh = exclusionHeight
+            val w = resources.displayMetrics.widthPixels
+            val leftRect = Rect(0, 0, ew, eh)
+            val rightRect = Rect(w - ew, 0, w, eh)
+            window.decorView.setSystemGestureExclusionRects(listOf(leftRect, rightRect))
+        }
 
         val terminalManager = TerminalManager.getInstance(this)
         
@@ -135,9 +146,11 @@ class MainActivity : ComponentActivity() {
                 } else if (longPressRunnable == null) {
                     val screenWidth = resources.displayMetrics.widthPixels
                     if (downX < edgeWidth || downX > screenWidth - edgeWidth) {
-                        longPressRunnable = showStatusRunnable
-                        handler.postDelayed(showStatusRunnable, longPressTimeout)
-                        return true
+                        if (downY < exclusionHeight) {
+                            longPressRunnable = showStatusRunnable
+                            handler.postDelayed(showStatusRunnable, longPressTimeout)
+                            return true
+                        }
                     }
                 }
             }
