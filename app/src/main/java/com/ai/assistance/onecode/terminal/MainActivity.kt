@@ -89,7 +89,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             try {
                 if (terminalManager.terminalState.value.sessions.isEmpty()) {
-                    terminalManager.createNewSession("Default Session")
+                    terminalManager.createNewSession("Ubuntu 1")
                     Log.d("MainActivity", "Initial session created successfully")
                 } else {
                     Log.d("MainActivity", "Session already exists, skipping creation")
