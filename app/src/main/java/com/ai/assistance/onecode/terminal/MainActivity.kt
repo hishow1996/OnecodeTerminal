@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
     private val hideStatusRunnable = Runnable {
         statusBarShown = false
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
     }
 
     private var longPressRunnable: Runnable? = null
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     private val showStatusRunnable = Runnable {
         statusBarShown = true
         handler.removeCallbacks(hideStatusRunnable)
-        windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
+        windowInsetsController.show(WindowInsetsCompat.Type.navigationBars())
         handler.postDelayed(hideStatusRunnable, 3000L)
         longPressRunnable = null
     }
@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
         windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val ew = edgeWidth
@@ -141,7 +141,7 @@ class MainActivity : ComponentActivity() {
                         statusBarShown = false
                         lastBackPressedTime = 0L
                         handler.removeCallbacks(hideStatusRunnable)
-                        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+                        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
                     }
                 } else if (longPressRunnable == null) {
                     val screenWidth = resources.displayMetrics.widthPixels
