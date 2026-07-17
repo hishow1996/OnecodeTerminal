@@ -17,5 +17,8 @@
         
         <!-- 确保内容可以延伸到系统栏区域 -->
         <item name="android:fitsSystemWindows">false</item>
+
+        <!-- 明确禁止窗口透明，防止分屏等场景透出桌面 -->
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 </resources>
