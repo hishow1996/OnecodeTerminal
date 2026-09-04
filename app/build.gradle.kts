@@ -10,7 +10,6 @@ android {
     namespace = "com.ai.assistance.onecode.terminal"
     compileSdk = 34
 
-    
     val keystoreProperties = Properties()
     val keystorePropertiesFile = rootProject.file("keystore.properties")
     if (keystorePropertiesFile.exists()) {
@@ -24,7 +23,6 @@ android {
         keystoreProperties.setProperty("RELEASE_STORE_PASSWORD", System.getenv("RELEASE_STORE_PASSWORD") ?: "")
     }
 
-    
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties.getProperty("RELEASE_KEY_ALIAS")
@@ -34,21 +32,16 @@ android {
         }
     }
 
-
     defaultConfig {
         applicationId = "com.ai.assistance.onecode.terminal"
         minSdk = 26
         targetSdk = 34
-        versionCode = 16
-        versionName = "1.8.5"
+        versionCode = 20
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-        ndk {
-            abiFilters += listOf("arm64-v8a")
-        }
+        vectorDrawables { useSupportLibrary = true }
+        ndk { abiFilters += listOf("arm64-v8a") }
     }
 
     buildTypes {
@@ -60,24 +53,21 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
         }
-        debug {
-            signingConfig = signingConfigs.getByName("release")
-        }
+        debug { signingConfig = signingConfigs.getByName("release") }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    kotlinOptions { jvmTarget = "17" }
+
     buildFeatures {
         compose = true
         aidl = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8"
-    }
+    composeOptions { kotlinCompilerExtensionVersion = "1.5.8" }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -89,9 +79,7 @@ android {
                 "META-INF/NOTICE.txt"
             )
         }
-        jniLibs {
-            useLegacyPackaging = true
-        }
+        jniLibs { useLegacyPackaging = true }
     }
 }
 
@@ -106,7 +94,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("com.google.android.material:material:1.9.0") // Material Components for theme
+    implementation("com.google.android.material:material:1.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
